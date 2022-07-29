@@ -14,19 +14,20 @@ describe('My first test suit', () => {
     })
 
     it("click on cart logo", () => {
+        //add to cart
         cy.get(':nth-child(1) > .product-action > button').click();
         cy.get('.products').find('.product').eq(3).contains('ADD TO CART').click();
        
+        //click on crt logo
         cy.get('.cart-icon > img').click();
         cy.get("div[class='cart-preview active'] button[type='button']").click();
 
+        //apply coupon
         cy.get('.promoCode').type('rahulshettyacademy');
         cy.get('.promoBtn').click();
 
         cy.wait(4000);
         cy.get('.promoInfo').should('have.text', 'Code applied ..!');
-
-
     })
 
 })
