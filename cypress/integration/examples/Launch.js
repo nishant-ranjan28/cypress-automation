@@ -6,22 +6,34 @@ describe("My first test suit", () => {
 
     cy.get(".search-keyword").type("ca");
 
+    cy.get(".products").as("productList");
+
     cy.get(".product").should("have.length", 5);
     cy.get(".product:visible").should("have.length", 4);
-    cy.get(".products").find(".product").should("have.length", 4);
+    cy.get("@productList").find(".product").should("have.length", 4);
   });
 
   it("click on cart logo", () => {
+    cy.get(".products").as("productList");
+
     //add to cart
     cy.get(":nth-child(1) > .product-action > button").click();
-    cy.get(".products").find(".product").eq(1).contains("ADD TO CART").click();
+    cy.get("@productList")
+      .find(".product")
+      .eq(1)
+      .contains("ADD TO CART")
+      .click()
+      .then(() => {
+        console.log("added to cart");
+      });
 
     //use loops to add all the products to cart
-    cy.get(".products")
+    cy.get("@productList")
       .find(".product")
       .each(($el, index, $list) => {
         const textVeg = $el.find("h4.product-name").text();
 
+        //add cashews if find
         if (textVeg.includes("Cashews")) {
           cy.wrap($el).find("button").click();
           //cy.wrap($el).find(contains('ADD TO CART')).click();
@@ -38,5 +50,9 @@ describe("My first test suit", () => {
 
     cy.wait(4000);
     cy.get(".promoInfo").should("have.text", "Code applied ..!");
+
+    cy.get(".brand").then(function (logo) {
+      cy.log(logo.text());
+    });
   });
 });
